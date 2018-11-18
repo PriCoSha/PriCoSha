@@ -78,8 +78,8 @@ def private_content():
         parameter = (fg_name, owner_email)
         sql = '\
         SELECT DISTINCT item_name, item_id, email_post, post_time, file_path \
-        FROM ContentItem JOIN belong \
-        WHERE (ContentItem.email_post = belong.owner_email) AND fg_name = %s AND belong.owner_email = %s;\
+        FROM ContentItem JOIN Belong \
+        WHERE (ContentItem.email_post = Belong.owner_email) AND fg_name = %s AND Belong.owner_email = %s;\
         '  # TODO: ordered by descending time, wrong sql!
         data = query(sql, parameter)
         response = SuccessResponse({"contentList": data})
