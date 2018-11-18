@@ -43,7 +43,7 @@ def logout():
 def public_content():
     sql = '\
     SELECT item_name, item_id, email_post, post_time, file_path \
-    FROM contentItem \
+    FROM ContentItem \
     WHERE is_pub;\
     '  # TODO: ordered by descending time
     parameter = ()
