@@ -44,8 +44,9 @@ def public_content():
     sql = '\
     SELECT item_name, item_id, email_post, post_time, file_path \
     FROM ContentItem \
-    WHERE is_pub;\
-    '  # TODO: ordered by descending time
+    WHERE is_pub AND NOW()-post_time < 12960000 \
+    ORDER BY post_time DESC;\
+    '
     parameter = ()
     data = query(sql, parameter)
     response = SuccessResponse({"contentList": data})
@@ -60,7 +61,7 @@ def friendgroup():
         SELECT owner_email, fg_name, description \
         FROM Belong NATURAL JOIN Friendgroup \
         WHERE email = %s;\
-        '  # TODO: ordered by descending time
+        '
         parameter = (email)
         data = query(sql, parameter)
         response = SuccessResponse({"friendgroup": data})
@@ -71,22 +72,38 @@ def friendgroup():
 
 @api.route('/private_content', methods=['GET'])
 def private_content():
+    fg_name = request.args['fg_name']
+    owner_email = request.args['owner_email']
     try:
-        session['email']  # TODO: check if this person belongs to this friendgroup
-        fg_name = request.args['fg_name']
-        owner_email = request.args['owner_email']
+        email = session['email']
+        parameter = (email, fg_name, owner_email)
+        sql = '\
+        SELECT owner_email, fg_name \
+        FROM Belong \
+        WHERE email = %s AND fg_name = %s AND owner_email = %s;\
+        '
+        data = query(sql, parameter)
+        if data:
+            pass
+        else:
+            response = ErrorResponse({"code": 4, "errormsg": "Permission Denied"})
+            return jsonify(response.__dict__)
+    except KeyError:
+        response = ErrorResponse({"code": 3, "errormsg": "session error"})
+        return jsonify(response.__dict__)
+
+    try:
         parameter = (fg_name, owner_email)
         sql = '\
-        SELECT DISTINCT item_name, item_id, email_post, post_time, file_path \
-        FROM ContentItem JOIN Belong \
-        WHERE (ContentItem.email_post = Belong.owner_email) AND fg_name = %s AND Belong.owner_email = %s;\
-        '  # TODO: ordered by descending time, wrong sql!
+        SELECT item_name, item_id, email_post, post_time, file_path \
+        FROM ContentItem NATURAL JOIN share \
+        WHERE fg_name = %s AND owner_email = %s \
+        ORDER BY post_time DESC;\
+        '
         data = query(sql, parameter)
         response = SuccessResponse({"contentList": data})
     except pymysql.err.IntegrityError:
         response = ErrorResponse({"code": 2, "errormsg": "invalid request"})
-    except KeyError:
-        response = ErrorResponse({"code": 3, "errormsg": "session error"})
     return jsonify(response.__dict__)
 
 
