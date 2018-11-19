@@ -175,8 +175,12 @@ def get_rate():
             # If it is not, return error
         pass  # TODO
 
+
 # TODO: /tag GET
+
 
 # TODO: /item POST
 
+
 # TODO: /friendgroup PATCH (add a member to a friendgroup)
+
