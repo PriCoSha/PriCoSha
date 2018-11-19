@@ -2,11 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="7e1ec8ea-7960-41dd-9f93-1111ac915d04" name="Default" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/dataSources.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/sqldialects.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dictionaries/Max.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dictionaries/Max.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api.py" beforeDir="false" afterPath="$PROJECT_DIR$/api.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -64,29 +61,38 @@
           <file leaf-file-name="config.py" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/config.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="405">
-                  <caret line="27" column="44" selection-start-line="27" selection-start-column="44" selection-end-line="27" selection-end-column="44" />
+                <state relative-caret-position="255">
+                  <caret line="17" lean-forward="true" selection-start-line="17" selection-end-line="17" />
                 </state>
               </provider>
             </entry>
           </file>
-          <file leaf-file-name="api.py" pinned="false" current-in-tab="true">
+          <file leaf-file-name="api.py" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/api.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="434">
-                  <caret line="175" column="20" lean-forward="true" selection-start-line="175" selection-start-column="20" selection-end-line="175" selection-end-column="20" />
+                <state relative-caret-position="600">
+                  <caret line="176" lean-forward="true" selection-start-line="176" selection-end-line="176" />
                   <folding>
                     <element signature="e#0#61#0" expanded="true" />
+                    <element signature="e#198#723#0" />
+                    <element signature="e#796#978#0" />
+                    <element signature="e#1026#1250#0" />
+                    <element signature="e#1410#1859#0" />
+                    <element signature="e#2030#2967#0" />
+                    <element signature="e#2658#3104#0" />
+                    <element signature="e#3475#3916#0" />
+                    <element signature="e#4349#4859#0" />
+                    <element signature="e#5437#5650#0" />
                   </folding>
                 </state>
               </provider>
             </entry>
           </file>
-          <file leaf-file-name="README.md" pinned="false" current-in-tab="false">
+          <file leaf-file-name="README.md" pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/README.md">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="30">
-                  <caret line="2" column="70" selection-start-line="2" selection-start-column="70" selection-end-line="2" selection-end-column="70" />
+                <state relative-caret-position="60">
+                  <caret line="4" column="32" selection-start-line="4" selection-start-column="32" selection-end-line="4" selection-end-column="32" />
                 </state>
               </provider>
             </entry>
@@ -145,6 +151,7 @@
         <option value="$PROJECT_DIR$/config.py" />
         <option value="$PROJECT_DIR$/venv/README.md" />
         <option value="$PROJECT_DIR$/api.py" />
+        <option value="$PROJECT_DIR$/README.md" />
       </list>
     </option>
   </component>
@@ -297,20 +304,20 @@
     <frame x="0" y="0" width="1926" height="1080" extended-state="0" />
     <editor active="true" />
     <layout>
-      <window_info anchor="bottom" id="TODO" order="6" sideWeight="0.49946922" weight="0.32935324" />
-      <window_info anchor="bottom" id="Event Log" sideWeight="0.5005308" side_tool="true" visible="true" weight="0.32935324" />
+      <window_info anchor="bottom" id="TODO" order="6" sideWeight="0.49893844" weight="0.32935324" />
+      <window_info anchor="bottom" id="Event Log" sideWeight="0.50159234" side_tool="true" visible="true" weight="0.32935324" />
       <window_info anchor="bottom" id="Database Changes" show_stripe_button="false" />
-      <window_info anchor="bottom" id="Run" order="2" weight="0.2875622" />
+      <window_info anchor="bottom" id="Run" order="2" sideWeight="0.49946922" weight="0.2875622" />
       <window_info anchor="bottom" id="Version Control" weight="0.32935324" />
-      <window_info anchor="bottom" id="Python Console" weight="0.32935324" />
-      <window_info anchor="bottom" id="Terminal" sideWeight="0.49946922" weight="0.32935324" />
+      <window_info anchor="bottom" id="Python Console" sideWeight="0.49946922" weight="0.32935324" />
+      <window_info anchor="bottom" id="Terminal" sideWeight="0.49840763" visible="true" weight="0.32935324" />
       <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.17940553" />
       <window_info anchor="bottom" id="Docker" show_stripe_button="false" />
       <window_info anchor="right" id="Database" weight="0.32961783" />
       <window_info anchor="bottom" id="Find" order="1" />
       <window_info anchor="right" id="SciView" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
-      <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
+      <window_info anchor="bottom" id="Debug" order="3" sideWeight="0.49946922" weight="0.4" />
       <window_info id="Favorites" side_tool="true" />
       <window_info anchor="bottom" id="Database Console" sideWeight="0.49946922" weight="0.32935324" />
       <window_info anchor="right" id="Commander" order="0" weight="0.4" />
@@ -357,20 +364,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/README.md">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="30">
-          <caret line="2" column="70" selection-start-line="2" selection-start-column="70" selection-end-line="2" selection-end-column="70" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/config.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="405">
-          <caret line="27" column="44" selection-start-line="27" selection-start-column="44" selection-end-line="27" selection-end-column="44" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file:///Library/Frameworks/Python.framework/Versions/3.5/lib/python3.5/site-packages/flask/app.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="230">
@@ -410,11 +403,34 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/api.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="434">
-          <caret line="175" column="20" lean-forward="true" selection-start-line="175" selection-start-column="20" selection-end-line="175" selection-end-column="20" />
+        <state relative-caret-position="600">
+          <caret line="176" lean-forward="true" selection-start-line="176" selection-end-line="176" />
           <folding>
             <element signature="e#0#61#0" expanded="true" />
+            <element signature="e#198#723#0" />
+            <element signature="e#796#978#0" />
+            <element signature="e#1026#1250#0" />
+            <element signature="e#1410#1859#0" />
+            <element signature="e#2030#2967#0" />
+            <element signature="e#2658#3104#0" />
+            <element signature="e#3475#3916#0" />
+            <element signature="e#4349#4859#0" />
+            <element signature="e#5437#5650#0" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/config.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="255">
+          <caret line="17" lean-forward="true" selection-start-line="17" selection-end-line="17" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/README.md">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="60">
+          <caret line="4" column="32" selection-start-line="4" selection-start-column="32" selection-end-line="4" selection-end-column="32" />
         </state>
       </provider>
     </entry>
