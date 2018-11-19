@@ -124,8 +124,8 @@ def tag_count():
     return jsonify(response.__dict__)
 
 
-@api.route('/tag', methods=['GET'])
-def tag():
+@api.route('/pending_tag', methods=['GET'])
+def pending_tag():
     try:
         email = session['email']  # authenticate login
         sql = '\
@@ -141,4 +141,44 @@ def tag():
     return jsonify(response.__dict__)
 
 
+@api.route('/tag', methods=['PATCH'])
+def tag_patch():
+    try:
+        email = session['email']
+        status = request.form['status']
+        email_tagged = request.form['email_tagged']
+        email_tagger = request.form['email_tagger']
+        item_id = request.form['item_id']
+        if email != email_tagged:
+            response = ErrorResponse({"code": 4, "errormsg": "Permission Denied"})
+            return jsonify(response.__dict__)
+        parameter = (status, email_tagged, email_tagger, item_id)
+        sql = '\
+        UPDATE Tag \
+        SET status = %s \
+        WHERE email_tagged = %s AND email_tagger = %s AND item_id = %s;\
+        '
+        data = query(sql, parameter)  # TODO: potential risk, non-existent tag
+        response = SuccessResponse({"msg": "Successfully updated"})
+    except KeyError:
+        response = ErrorResponse({"code": 3, "errormsg": "session error"})
+    except pymysql.err.IntegrityError:
+        response = ErrorResponse({"code": 5, "errormsg": "invalid parameter, please check"})
+    return jsonify(response.__dict__)
 
+
+@api.route('/rate', methods=['GET'])
+def get_rate():
+    try:
+        email = session['email']
+    except KeyError:
+        # First, check if the content is public
+            # If it is, set email to "Guest"
+            # If it is not, return error
+        pass  # TODO
+
+# TODO: /tag GET
+
+# TODO: /item POST
+
+# TODO: /friendgroup PATCH (add a member to a friendgroup)
