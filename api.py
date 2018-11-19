@@ -1,4 +1,4 @@
-from flask import request, Blueprint, session, jsonify, abort
+from flask import request, Blueprint, session, jsonify
 from util import *
 
 api = Blueprint('api', __name__)
@@ -8,13 +8,11 @@ api = Blueprint('api', __name__)
 def login_auth():
     email = request.form['email']
     password = request.form['password']
-
     sql = '\
     SELECT fname, lname \
     FROM Person \
     WHERE email = %s AND password = %s;\
     '
-
     parameter = (email, password)
     data = query(sql, parameter)
     if data:
