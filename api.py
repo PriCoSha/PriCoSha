@@ -27,6 +27,24 @@ def login_auth():
     return jsonify(response.__dict__)
 
 
+@api.route('/name', methods=['GET'])
+def get_name():
+    try:
+        email = session['email']
+        sql = '\
+        SELECT fname, lname \
+        FROM Person \
+        WHERE email = %s\
+        '
+        parameter = (email)
+        data = query(sql, parameter)
+        print(data)
+        response = SuccessResponse(data[0])
+    except KeyError:
+        response = ErrorResponse({"code": 3, "errormsg": "session error"})
+    return jsonify(response.__dict__)
+
+
 @api.route('/logout', methods=['GET'])
 def logout():
     if session.__len__() != 0:
