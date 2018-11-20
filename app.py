@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, render_template
 from config import config
 
 
@@ -15,8 +15,13 @@ def create_app(config_name):
 
     # static pages
     @app.route('/')
-    def hello_world():
-        return 'Hello World!'
+    def index():
+        return render_template("index.html")
+
+    @app.route('/login.html')
+    def login_page():
+        return render_template("login.html")
+
 
     return app
 
