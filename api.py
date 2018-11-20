@@ -1,4 +1,4 @@
-from flask import request, Blueprint, session, jsonify
+from flask import request, Blueprint, session, jsonify, abort
 from util import *
 
 api = Blueprint('api', __name__)
@@ -167,20 +167,102 @@ def tag_patch():
 
 @api.route('/rate', methods=['GET'])
 def get_rate():
+    item_id = request.args['item_id']
     try:
         email = session['email']
     except KeyError:
-        # First, check if the content is public
-            # If it is, set email to "Guest"
-            # If it is not, return error
-        pass  # TODO
+        email = 'guest'
+    if is_visible(item_id, email):
+        sql = '\
+        SELECT email, emoji, rate_time \
+        FROM Rate \
+        WHERE item_id = %s \
+        ORDER BY rate_time DESC;\
+        '
+        parameter = (item_id)
+        data = query(sql, parameter)
+        response = SuccessResponse({"rateList": data})
+    else:
+        response = ErrorResponse({"code": 4, "errormsg": "Permission Denied"})
+    return jsonify(response.__dict__)
 
 
-# TODO: /tag GET
+@api.route('/rate', methods=['GET'])
+def get_tag():
+    item_id = request.args['item_id']
+    try:
+        email = session['email']
+    except KeyError:
+        email = 'guest'
+    if is_visible(item_id, email):
+        sql = '\
+        SELECT email_tagger, email_tagged, tagtime \
+        FROM Tag \
+        WHERE item_id = %s AND status = 1 \
+        ORDER BY tagtime DESC;\
+        '
+        parameter = (item_id)
+        data = query(sql, parameter)
+        response = SuccessResponse({"tagList": data})
+    else:
+        response = ErrorResponse({"code": 4, "errormsg": "Permission Denied"})
+    return jsonify(response.__dict__)
+
+
+# TODO: /tag POST
 
 
 # TODO: /item POST
 
 
 # TODO: /friendgroup PATCH (add a member to a friendgroup)
+@api.route('/friendgroup', methods=['PATCH'])
+def add_friend():
+    fg_name = request.form['fg_name']
+    owner_email = request.form['owner_email']
 
+    fname = request.form.get('fname')
+    lname = request.form.get('lname')
+    email = request.form.get('email')
+
+    try:
+        session_email = session['email']
+        if session_email != owner_email:
+            response = ErrorResponse({"code": 4, "errormsg": "Permission Denied"})
+            return jsonify(response.__dict__)
+        if email:  # insert using email
+            parameter = (email, owner_email, fg_name)
+            sql = '\
+            INSERT INTO Belong(email, owner_email, fg_name) \
+            VALUES (%s, %s, %s);\
+            '
+            query(sql, parameter)
+            response = SuccessResponse({"msg": "New member successfully added."})
+        elif fname and lname: # insert using fname and lname
+            # find this person's email first:
+            sql = '\
+            SELECT email \
+            FROM Person \
+            WHERE fname = %s AND lname = %s;\
+            '
+            parameter = (fname, lname)
+            data = query(sql, parameter)
+            if len(data) == 0:
+                response = ErrorResponse({"code": 7, "errormsg": "Person not found"})
+            elif len(data) == 1:
+                parameter = (data[0]['email'], owner_email, fg_name)
+                sql = '\
+                INSERT INTO Belong(email, owner_email, fg_name) \
+                VALUES (%s, %s, %s);\
+                '
+                query(sql, parameter)
+                response = SuccessResponse({"msg": "New member successfully added."})
+            else:
+                response = ErrorResponse({"code": 8, "errormsg": "Multiple persons found, use email instead."})
+        else:
+            abort(400)
+    except KeyError:
+        response = ErrorResponse({"code": 3, "errormsg": "session error"})
+    except pymysql.err.IntegrityError:
+        response = ErrorResponse({"code": 6, "errormsg": "This person is already in the group"})
+    return jsonify(response.__dict__)

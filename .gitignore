@@ -1,4 +1,5 @@
 .idea/
+flask_entrance.py
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

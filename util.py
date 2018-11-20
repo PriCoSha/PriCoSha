@@ -33,3 +33,18 @@ def query(sql, parameter):
     finally:
         connection.close()
     return result
+
+
+def is_visible(item_id, email):
+    parameter = (item_id, email)
+    sql = '\
+    SELECT item_id \
+    FROM Belong NATURAL JOIN Share NATURAL JOIN ContentItem \
+    WHERE item_id = %s AND (email = %s OR is_pub);\
+    '
+    data = query(sql, parameter)
+    if data:
+        return True
+    return False
+
+

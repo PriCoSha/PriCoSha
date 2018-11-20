@@ -22,5 +22,5 @@ def create_app(config_name):
 
 
 if __name__ == '__main__':
-    myapp = create_app('development')
-    myapp.run()
+    app = create_app("development")
+    app.run()
