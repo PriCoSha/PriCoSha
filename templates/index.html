@@ -18,7 +18,7 @@
 <body>
 
 
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
+<nav id="guestNav" class="navbar navbar-expand-lg navbar-light bg-light">
     <a class="navbar-brand" href="#">PriCoSha</a>
     <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
         <ul class="navbar-nav mr-auto">
@@ -28,6 +28,81 @@
         </ul>
     </div>
 </nav>
+
+
+<nav id="userNav" class="navbar navbar-expand-lg navbar-light bg-light">
+    <a class="navbar-brand" href="#">PriCoSha</a>
+
+
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo02"
+            aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
+        <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+
+            <li class="nav-item">
+                <a class="nav-link" href="#">Post</a>
+            </li>
+            <li id="tagRequestOption" class="nav-item">
+                <a class="nav-link" href="#">Tag Request <span id="tagRequestNumber" class="badge badge-danger">9</span>
+                </a>
+            </li>
+            <li id="logoutlink" class="nav-item">
+
+                <a class="nav-link" href="">logout</a>
+            </li>
+        </ul>
+        <span id="welcomeMessage" class="navbar-text">
+    Welcome, ChouShaBi
+  </span>
+    </div>
+</nav>
+
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-2">
+        </div>
+        <div class="col-md-8">
+
+            <div class="card">
+                <div class="card-header">
+                    Public Contents Post in last 24 hours
+                </div>
+                <div class="card-block">
+                    <table class="table table-striped">
+                        <thead>
+                        <tr>
+                            <th>Item name</th>
+                            <th>Item ID</th>
+                            <th>Post by</th>
+                            <th>Post time</th>
+                            <th>File Path</th>
+
+
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <th scope="row">content1</th>
+                            <td>1</td>
+                            <td>bg1622@nyu.edu</td>
+                            <td>2018/10/10 10:10</td>
+                            <td>4399.com</td>
+                        </tr>
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+
+        </div>
+
+    </div>
+</div>
 
 
 <!-- Optional JavaScript -->

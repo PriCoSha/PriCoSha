@@ -26,10 +26,8 @@ $(function () {
         $.getJSON(settings).done(function (response) {
             let state = response.state
 
-            let fname = response.data.fname
-            let lname = response.data.lname
             if (state){
-                window.location.replace(`/#${email}/${fname}/${lname}`)
+                window.location.replace(`/`)
             }
             else {
                 alert(response.error.errormsg)
