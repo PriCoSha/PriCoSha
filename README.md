@@ -3,7 +3,7 @@
 
 2. Insert testing entries using the `test_entries.sql` on google drive
 
-3. Setting up the environment
+3. Set up the environment
 
    ```bash
    pip install Flask
@@ -13,7 +13,7 @@
 4. Run
 
    ```bash
-   python app.py
+   python3 app.py
    ```
 
 5. Use postman to play with the APIs

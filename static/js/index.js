@@ -74,8 +74,7 @@ $(function () {
                     }
                 });
 
-
-                // Does not log in
+            // Do not log in
             } else {
                 $("#userNav").hide();
             }
