@@ -49,7 +49,6 @@ $(function () {
                     "headers": {}
                 };
                 $.getJSON(settings).done(function (response) {
-                    // console.log(response);
                     let fname = response.data.fname;
                     let lname = response.data.lname;
                     $("#welcomeMessage").text("Welcome, " + fname + " " + lname + "!");
@@ -73,9 +72,6 @@ $(function () {
                     } else {
                         $("#tagRequestOption").hide();
                     }
-
-
-                    // console.log(response);
                 });
 
 
