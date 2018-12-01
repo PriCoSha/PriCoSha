@@ -48,3 +48,17 @@ def is_visible(item_id, email):
     return False
 
 
+def check_belong(email, fg_name, owner_email):
+    parameter = (email, fg_name, owner_email)
+    sql = '\
+    SELECT owner_email, fg_name \
+    FROM Belong \
+    WHERE email = %s AND fg_name = %s AND owner_email = %s;\
+    '
+    data = query(sql, parameter)
+    if data:
+        return True
+    return False
+
+
+

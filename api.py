@@ -174,7 +174,7 @@ def tag_patch():
         SET status = %s \
         WHERE email_tagged = %s AND email_tagger = %s AND item_id = %s;\
         '
-        data = query(sql, parameter)  # TODO: potential risk, non-existent tag
+        query(sql, parameter)  # TODO: potential risk, non-existent tag
         response = SuccessResponse({"msg": "Successfully updated"})
     except KeyError:
         response = ErrorResponse({"code": 3, "errormsg": "session error"})
@@ -227,13 +227,104 @@ def get_tag():
     return jsonify(response.__dict__)
 
 
-# TODO: /tag POST
+@api.route('/tag', methods=['POST'])
+def post_tag():
+    email_tagged = request.form['email_tagged']
+    email_tagger = request.form['email_tagger']
+    item_id = request.form['item_id']
+
+    try:
+        session_email = session['email']
+        # authenticate user's identity
+        if session_email != email_tagger:
+            response = ErrorResponse({"code": 4, "errormsg": "Permission Denied"})
+            return jsonify(response.__dict__)
+        # authenticate if tagged can see the content
+        if is_visible(item_id, email_tagger) and is_visible(item_id, email_tagged):
+            sql = '\
+            INSERT INTO Tag(email_tagged, email_tagger, item_id, status) \
+            VALUES(%s,%s,%s,%s);\
+            '
+            if email_tagger == email_tagged:
+                status = '1'
+                msg = "Self Tag Successfully Posted."
+            else:
+                status = None
+                msg = "Tag Successfully Posted, waiting for taggee's approval."
+            parameter = (email_tagged, email_tagger, item_id, status)
+            query(sql, parameter)
+            response = SuccessResponse({"msg": msg})
+        else:
+            response = ErrorResponse({"code": 4, "errormsg": "Permission Denied"})
+    except KeyError:
+        response = ErrorResponse({"code": 3, "errormsg": "session error"})
+    return jsonify(response.__dict__)
 
 
-# TODO: /item POST
+@api.route('/item', methods=['POST'])
+def post_item():
+    owner_emails = request.form['owner_emails'].split(';')
+    fg_names = request.form['fg_names'].split(';')
+    if len(owner_emails) != len(fg_names):
+        response = ErrorResponse({"code": 7, "errormsg": "fg_name and owner_email do not match."})
+        return jsonify(response.__dict__)
+    file_path = request.form['file_path']
+    item_name = request.form['item_name']
+    is_pub = int(request.form['is_pub'])
+    if is_pub:
+        is_pub = True
+    else:
+        is_pub = False
+    email_post = request.form['email_post']
+
+    try:
+        session_email = session['email']
+        # authenticate user's identity
+        if session_email != email_post:
+            response = ErrorResponse({"code": 4, "errormsg": "Permission Denied"})
+            return jsonify(response.__dict__)
+        sql = '\
+        INSERT INTO ContentItem(email_post, file_path, item_name, is_pub) \
+        VALUES(%s, %s, %s, %s); \
+        '
+        parameter = (email_post, file_path, item_name, is_pub)
+        query(sql, parameter)
+        sql = '\
+        SELECT item_id \
+        FROM ContentItem \
+        WHERE email_post = %s AND file_path = %s AND item_name = %s AND is_pub = %s \
+        ORDER BY post_time DESC;\
+        '
+        data = query(sql, parameter)
+        item_id = data[0]["item_id"]
+
+        fg_error = []
+        for i in range(len(owner_emails)):
+            if not check_belong(email_post, fg_names[i], owner_emails[i]):
+                fg_error.append((owner_emails[i], fg_names[i]))
+                continue
+            try:
+                parameter = (owner_emails[i], fg_names[i], item_id)
+                sql = '\
+                INSERT INTO Share(owner_email, fg_name, item_id) \
+                VALUES (%s, %s, %s);\
+                '
+                query(sql, parameter)
+            except pymysql.err.IntegrityError:
+                fg_error.append((owner_emails[i], fg_names[i]))
+
+        if fg_error:
+            response = SuccessResponse({"msg": "Item successfully posted,"
+                                               " but some it can't be shared to the following friendgroup",
+                                        "item_id": item_id,
+                                        "error_fg": fg_error})
+        else:
+            response = SuccessResponse({"msg": "Item successfully posted", "item_id": item_id})
+    except KeyError:
+        response = ErrorResponse({"code": 3, "errormsg": "session error"})
+    return jsonify(response.__dict__)
 
 
-# TODO: /friendgroup PATCH (add a member to a friendgroup)
 @api.route('/friendgroup', methods=['PATCH'])
 def add_friend():
     fg_name = request.form['fg_name']
