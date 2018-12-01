@@ -261,8 +261,8 @@ def post_tag():
     return jsonify(response.__dict__)
 
 
-@api.route('/item', methods=['POST'])
-def post_item():
+@api.route('/content', methods=['POST'])
+def post_content():
     owner_emails = request.form['owner_emails'].split(';')
     fg_names = request.form['fg_names'].split(';')
     if len(owner_emails) != len(fg_names):
