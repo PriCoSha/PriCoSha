@@ -513,8 +513,8 @@ def post_group_tag():
         if is_visible(item_id, email_tagger) and is_group_visible(owner_email, fg_name, item_id):
             # insert a new pending group tag
             sql = '\
-            INSERT INTO GroupTag(email_tagger, owner_email, fg_name, item_id, num_approval) \
-            VALUES(%s, %s, %s, %s, 0);\
+            INSERT INTO GroupTag(email_tagger, owner_email, fg_name, item_id, num_approval, veto) \
+            VALUES(%s, %s, %s, %s, 0, 0);\
             '
             parameter = (email_tagger, owner_email, fg_name, item_id)
             query(sql, parameter)
