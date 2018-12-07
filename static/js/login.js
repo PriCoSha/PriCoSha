@@ -8,7 +8,6 @@ $(function () {
         form.append("email", email);
         let password = $("#inputPassword")[0].value;
 
-
         form.append("password", Sha1.hash(password));
 
         let settings = {
@@ -21,10 +20,10 @@ $(function () {
             "contentType": false,
             "mimeType": "multipart/form-data",
             "data": form
-        }
+        };
 
         $.getJSON(settings).done(function (response) {
-            let state = response.state
+            let state = response.state;
 
             if (state){
                 window.location.replace(`/`)
@@ -37,4 +36,4 @@ $(function () {
     });
 
 
-})
+});
