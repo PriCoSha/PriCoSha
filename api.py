@@ -9,19 +9,20 @@ def get_content():
     item_id = request.args['item_id']
     try:
         email = session['email']
-        if is_visible(item_id, email):
-            parameter = (item_id)
-            sql = '\
-            SELECT * \
-            FROM ContentItem \
-            WHERE item_id = %s;\
-            '
-            data = query(sql, parameter)
-            response = SuccessResponse(data[0])
-        else:
-            response = ErrorResponse({"code": 4, "errormsg": "Permission Denied"})
     except KeyError:
-        response = ErrorResponse({"code": 3, "errormsg": "session error"})
+        email = "Guest"
+
+    if is_visible(item_id, email):
+        parameter = (item_id)
+        sql = '\
+        SELECT * \
+        FROM ContentItem \
+        WHERE item_id = %s;\
+        '
+        data = query(sql, parameter)
+        response = SuccessResponse(data[0])
+    else:
+        response = ErrorResponse({"code": 4, "errormsg": "Permission Denied"})
     return jsonify(response.__dict__)
 
 
@@ -324,6 +325,8 @@ def post_tag():
             response = ErrorResponse({"code": 4, "errormsg": "Permission Denied"})
     except KeyError:
         response = ErrorResponse({"code": 3, "errormsg": "session error"})
+    except pymysql.err.IntegrityError:
+        response = ErrorResponse({"code": 6, "errormsg": "Duplicate Entries. Check your input!"})
     return jsonify(response.__dict__)
 
 
@@ -473,6 +476,8 @@ def post_rate():
             response = ErrorResponse({"code": 4, "errormsg": "Permission Denied: You do not have access to this item"})
     except KeyError:
         response = ErrorResponse({"code": 3, "errormsg": "session error"})
+    except pymysql.err.IntegrityError:
+        response = ErrorResponse({"code": 6, "errormsg": "Duplicate Entries. Check your input!"})
     return jsonify(response.__dict__)
 
 

@@ -14,6 +14,11 @@ $(function () {
         };
 
         $.getJSON(settings0).done(function (response) {
+
+            let state = response.state;
+            if (!state) {
+                window.location.replace(`/`)
+            }
             window.owner_email = response.data.email;
         });
 
@@ -67,35 +72,38 @@ $(function () {
             }
         }
 
-        form.append("owner_emails", l_oe.join(";"));
-        form.append("fg_names", l_fgn.join(";"));
-        form.append("file_path", filePath);
-        form.append("item_name", contentName);
-        form.append("is_pub", is_pub);
-        form.append("email_post", window.owner_email);
 
-        let settings = {
-            "async": true,
-            "crossDomain": true,
-            "url": "http://localhost:5000/api/content",
-            "method": "POST",
-            "headers": {},
-            "processData": false,
-            "contentType": false,
-            "mimeType": "multipart/form-data",
-            "data": form
-        };
+        if ((l.length == 0) | contentName == "" | filePath == "") {
+            alert("Please fill in every blank!")
 
-        $.getJSON(settings).done(function (response) {
-            let state = response.state;
-            console.log(state);
+        } else {
+            form.append("owner_emails", l_oe.join(";"));
+            form.append("fg_names", l_fgn.join(";"));
+            form.append("file_path", filePath);
+            form.append("item_name", contentName);
+            form.append("is_pub", is_pub);
+            form.append("email_post", window.owner_email);
 
-            if (state) {
-                window.location.replace(`/`)
-            } else {
-            }
-        });
+            let settings = {
+                "async": true,
+                "crossDomain": true,
+                "url": "http://localhost:5000/api/content",
+                "method": "POST",
+                "headers": {},
+                "processData": false,
+                "contentType": false,
+                "mimeType": "multipart/form-data",
+                "data": form
+            };
 
+            $.getJSON(settings).done(function (response) {
+                let state = response.state;
+                if (state) {
+                    window.location.replace(`/`)
+                } else {
+                }
+            });
+        }
     });
 
 

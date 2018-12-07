@@ -5,6 +5,22 @@ $(function () {
     $(document).ready(() => {
         cid = location.search.split('cid=')[1];
 
+        let settings0 = {
+            "async": true,
+            "crossDomain": true,
+            "url": "http://localhost:5000/api/email",
+            "method": "GET",
+            "headers": {}
+        };
+
+        $.getJSON(settings0).done(function (response) {
+
+            let state = response.state;
+            if (!state) {
+                window.location.replace(`/`)
+            }
+            window.owner_email = response.data.email;
+        });
 
         var settings = {
             "async": true,
@@ -29,19 +45,6 @@ $(function () {
         $('#inputSubmit').on("click", function () {
 
 
-            let settings0 = {
-                "async": true,
-                "crossDomain": true,
-                "url": "http://localhost:5000/api/email",
-                "method": "GET",
-                "headers": {}
-            };
-
-            $.getJSON(settings0).done(function (response) {
-                window.owner_email = response.data.email;
-            });
-
-
             var form = new FormData();
             form.append("email_tagged", $("#InputTagee")[0].value);
             form.append("email_tagger", owner_email);
@@ -61,7 +64,12 @@ $(function () {
             };
 
             $.getJSON(settings).done(function (response) {
-                console.log(response);
+                let state = response.state;
+                if (!state) {
+                    alert(response.error.errormsg)
+                } else {
+                    window.location.replace(`/`)
+                }
             });
 
         });

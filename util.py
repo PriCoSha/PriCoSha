@@ -39,7 +39,7 @@ def is_visible(item_id, email):
     parameter = (item_id, email)
     sql = '\
     SELECT item_id \
-    FROM Belong NATURAL JOIN Share NATURAL JOIN ContentItem \
+    FROM Belong NATURAL RIGHT JOIN Share NATURAL RIGHT JOIN ContentItem \
     WHERE item_id = %s AND (email = %s OR is_pub);\
     '
     data = query(sql, parameter)

@@ -5,6 +5,25 @@ $(function () {
         cid = location.search.split('cid=')[1];
 
 
+        let settings0 = {
+            "async": true,
+            "crossDomain": true,
+            "url": "http://localhost:5000/api/email",
+            "method": "GET",
+            "headers": {}
+        };
+
+        $.getJSON(settings0).done(function (response) {
+
+            let state = response.state;
+            if (!state) {
+                $("#posttagbutton").hide();
+                $("#postratebutton").hide();
+
+            }
+        });
+
+
         var settings = {
             "async": true,
             "crossDomain": true,
