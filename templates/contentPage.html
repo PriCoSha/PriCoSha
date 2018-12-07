@@ -3,34 +3,32 @@
 {% block title %}Content Page{% endblock %}
 
 {% block body %}
-        <div class="container">
-    <div class="row">
-        <div class="col-6">
-            <div class="card">
-                <div class="card-header">
-                    Content Detail
+    <div class="container">
+        <div class="row">
+            <div class="col-6">
+                <div class="card">
+                    <div class="card-header">
+                        Content Detail
+                    </div>
+                    <ul id="contentblock" class="list-group list-group-flush">
+                        <li class="list-group-item">Error</li>
+                    </ul>
                 </div>
-                <div class="card-block">
-Item ID: 8
-Item name: cat
-Post By: hl2752@nyu.edu
-Post Time: 20 Dec, 8:20 AM (2013)
-File path: google.com
 
-                </div>
+
             </div>
+            <div class="col-6">
+
+                <button id="postratebutton" type="button" class="btn btn-secondary">Post Rate</button>
+                <button id="posttagbutton" type="button" class="btn btn-secondary">Post Tag</button>
+
+
+            </div>
+
         </div>
 
-                <div class="col-6">
-
-  <button type="button" class="btn btn-secondary">Post Rate</button>
-  <button type="button" class="btn btn-secondary">Post Tag</button>
-
-
-        </div>
 
     </div>
-</div>
 
 
 
@@ -38,62 +36,62 @@ File path: google.com
 
 
     <div class="container">
-    <div class="row">
-        <div class="col-12">
-            <div class="card">
-                <div class="card-header">
-                    Rates
-                </div>
-                <div class="card-block">
-                    <table id="PendingTagsTable" class="table table-striped">
-                        <thead>
-                        <tr>
-                            <th>Post By</th>
-                            <th>Rating</th>
-                            <th>Time</th>
-                        </tr>
-                        </thead>
-                        <tbody id="PendingTagsTableBody">
-<tr>
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        Rates
+                    </div>
+                    <div class="card-block">
+                        <table id="PendingTagsTable" class="table table-striped">
+                            <thead>
+                            <tr>
+                                <th>Post By</th>
+                                <th>Rating</th>
+                                <th>Time</th>
+                            </tr>
+                            </thead>
+                            <tbody id="RateTableBody">
+                            <tr>
 
-                        </tr>
-                        </tbody>
-                    </table>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        Tags
+                    </div>
+                    <div class="card-block">
+                        <table id="PendingTagsTable" class="table table-striped">
+                            <thead>
+                            <tr>
+                                <th>Tagger</th>
+                                <th>Tagee</th>
+                                <th>Time</th>
+                            </tr>
+                            </thead>
+                            <tbody id="TagTableBody">
+                            <tr>
+
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-    <div class="row">
-        <div class="col-12">
-            <div class="card">
-                <div class="card-header">
-                    Tags
-                </div>
-                <div class="card-block">
-                    <table id="PendingTagsTable" class="table table-striped">
-                        <thead>
-                        <tr>
-                            <th>Tagger</th>
-                            <th>Tagee</th>
-                            <th>Time</th>
-                        </tr>
-                        </thead>
-                        <tbody id="PendingTagsTableBody">
-<tr>
-
-                        </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
 
 
 
 {% endblock %}
 
 {% block extrascript %}
-    <script src={{ url_for('static', filename='js/postContent.js') }}></script>
+    <script src={{ url_for('static', filename='js/contentPage.js') }}></script>
 {% endblock %}

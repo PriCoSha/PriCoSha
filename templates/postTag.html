@@ -1,0 +1,47 @@
+{% extends 'usage_base.html' %}
+
+{% block title %}Post Tag{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <div class="row">
+            <div class="col-6">
+                <div class="card">
+                    <div class="card-header">
+                        Content Detail
+                    </div>
+                    <ul id="contentblock" class="list-group list-group-flush">
+                        <li class="list-group-item">Error</li>
+                    </ul>
+                </div>
+
+
+            </div>
+            <div class="col-6">
+                <form>
+                    <div class="form-group">
+                        <label for="InputContentName">Tagee Email</label>
+                        <input type="text" class="form-control" id="InputTagee">
+                    </div>
+                    <button type="button" class="btn btn-primary" id="inputSubmit">Submit</button>
+                </form>
+            </div>
+
+        </div>
+
+
+    </div>
+
+
+
+
+
+
+
+
+
+{% endblock %}
+
+{% block extrascript %}
+    <script src={{ url_for('static', filename='js/postTag.js') }}></script>
+{% endblock %}

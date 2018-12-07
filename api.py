@@ -18,6 +18,8 @@ def get_content():
             '
             data = query(sql, parameter)
             response = SuccessResponse(data[0])
+        else:
+            response = ErrorResponse({"code": 4, "errormsg": "Permission Denied"})
     except KeyError:
         response = ErrorResponse({"code": 3, "errormsg": "session error"})
     return jsonify(response.__dict__)
@@ -456,7 +458,7 @@ def post_rate():
         session_email = session['email']
         # authenticate user's identity
         if session_email != rater_email:
-            response = ErrorResponse({"code": 4, "errormsg": "Permission Denied"})
+            response = ErrorResponse({"code": 4, "errormsg": "Permission Denied: identity cannot match"})
             return jsonify(response.__dict__)
         # authenticate if tagged can see the content
         if is_visible(item_id, rater_email):
@@ -468,7 +470,7 @@ def post_rate():
             query(sql, parameter)
             response = SuccessResponse({"msg": "Comment successfully posted."})
         else:
-            response = ErrorResponse({"code": 4, "errormsg": "Permission Denied"})
+            response = ErrorResponse({"code": 4, "errormsg": "Permission Denied: You do not have access to this item"})
     except KeyError:
         response = ErrorResponse({"code": 3, "errormsg": "session error"})
     return jsonify(response.__dict__)

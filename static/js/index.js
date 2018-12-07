@@ -16,7 +16,7 @@ $(function () {
             let html = '';
             for (let i = 0; i < contentList.length; i++) {
                 html = html + '<tr>';
-                html = html + '<td>' + contentList[i].item_name + '</td>';
+                html = html + '<td>' + `<a href="contentPage.html?cid=`+contentList[i].item_id+`">`+ contentList[i].item_name + '</td>';
                 html = html + '<td>' + contentList[i].item_id + '</td>';
                 html = html + '<td>' + contentList[i].email_post + '</td>';
                 html = html + '<td>' + contentList[i].post_time + '</td>';
@@ -126,7 +126,7 @@ $(function () {
                                     <tbody id="privateContentTableBody">`;
                         for (let i = 0; i < contentList.length; i++) {
                             html = html + '<tr>';
-                            html = html + '<td>' + contentList[i].item_name + '</td>';
+                            html = html + '<td>' + `<a href="contentPage.html?cid=`+contentList[i].item_id+`">`+contentList[i].item_name + '</td>';
                             html = html + '<td>' + contentList[i].item_id + '</td>';
                             html = html + '<td>' + contentList[i].email_post + '</td>';
                             html = html + '<td>' + contentList[i].post_time + '</td>';

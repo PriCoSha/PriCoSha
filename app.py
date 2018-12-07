@@ -33,6 +33,15 @@ def create_app(config_name):
     @app.route('/contentPage.html')
     def cp():
         return render_template("contentPage.html")
+
+    @app.route('/postTag.html')
+    def pt():
+        return render_template("postTag.html")
+
+    @app.route('/postRate.html')
+    def pr():
+        return render_template("postRate.html")
+
     return app
 
 

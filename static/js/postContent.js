@@ -15,7 +15,6 @@ $(function () {
 
         $.getJSON(settings0).done(function (response) {
             window.owner_email = response.data.email;
-            console.log(owner_email);
         });
 
 
