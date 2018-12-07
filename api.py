@@ -4,6 +4,41 @@ from util import *
 api = Blueprint('api', __name__)
 
 
+@api.route('/member', methods=['GET'])
+def get_member():
+    fg_name = request.args['fg_name']
+    owner_email = request.args['owner_email']
+    try:
+        email = session['email']
+        parameter = (email, fg_name, owner_email)
+        sql = '\
+        SELECT owner_email, fg_name \
+        FROM Belong \
+        WHERE email = %s AND fg_name = %s AND owner_email = %s;\
+        '
+        data = query(sql, parameter)
+        if data:
+            pass
+        else:
+            response = ErrorResponse({"code": 4, "errormsg": "Permission Denied"})
+            return jsonify(response.__dict__)
+    except KeyError:
+        response = ErrorResponse({"code": 3, "errormsg": "session error"})
+        return jsonify(response.__dict__)
+    try:
+        parameter = (fg_name, owner_email)
+        sql = '\
+        SELECT * \
+        FROM Belong \
+        WHERE fg_name = %s AND owner_email = %s \
+        '
+        data = query(sql, parameter)
+        response = SuccessResponse({"contentList": data})
+    except pymysql.err.IntegrityError:
+        response = ErrorResponse({"code": 2, "errormsg": "invalid request"})
+    return jsonify(response.__dict__)
+
+
 @api.route('/loginAuth', methods=['POST'])
 def login_auth():
     email = request.form['email']
@@ -610,3 +645,10 @@ def get_grouptag():
         response = ErrorResponse({"code": 4, "errormsg": "Permission Denied"})
     return jsonify(response.__dict__)
 
+
+#############################
+#        ITEM TYPES         #
+#############################
+@api.route('/typed_content', methods=['GET'])
+def get_content_by_type():
+    pass
