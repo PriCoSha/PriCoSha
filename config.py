@@ -19,7 +19,7 @@ class DevelopmentConfig(Config):
 DB = {'host': 'localhost',
       'port': 8889,
       'user': 'root',
-      'password': '',
+      'password': 'root',
       'db': 'pricosha',
       'charset': 'utf8mb4',
       'cursorclass': pymysql.cursors.DictCursor

@@ -80,6 +80,16 @@ def get_name():
     return jsonify(response.__dict__)
 
 
+@api.route('/email', methods=['GET'])
+def get_email():
+    try:
+        email = session['email']
+        response = SuccessResponse({"email": email})
+    except KeyError:
+        response = ErrorResponse({"code": 3, "errormsg": "session error"})
+    return jsonify(response.__dict__)
+
+
 @api.route('/logout', methods=['GET'])
 def logout():
     if session.__len__() != 0:
@@ -147,7 +157,7 @@ def private_content():
         parameter = (fg_name, owner_email)
         sql = '\
         SELECT * \
-        FROM ContentItem NATURAL JOIN share \
+        FROM ContentItem NATURAL JOIN Share \
         WHERE fg_name = %s AND owner_email = %s \
         ORDER BY post_time DESC;\
         '
@@ -180,7 +190,7 @@ def pending_tag():
     try:
         email = session['email']  # authenticate login
         sql = '\
-        SELECT email_tagger, item_name, file_path, tagtime \
+        SELECT * \
         FROM Tag NATURAL JOIN ContentItem \
         WHERE email_tagged = %s AND status IS NULL;\
         '
