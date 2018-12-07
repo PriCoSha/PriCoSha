@@ -22,6 +22,13 @@ def create_app(config_name):
     def login_page():
         return render_template("login.html")
 
+    @app.route('/postContent.html')
+    def postContent():
+        return render_template("postContent.html")
+
+    @app.route('/tagCenter.html')
+    def tc():
+        return render_template("tagCenter.html")
 
     return app
 

@@ -1,0 +1,37 @@
+{% extends 'usage_base.html' %}
+
+{% block title %}Post Content{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <div class="row">
+            <div class="col-10 offset-1">
+                <form>
+                    <div class="form-group">
+                        <label for="InputContentName">Content Name</label>
+                        <input type="text" class="form-control" id="InputContentName">
+                    </div>
+                    <div class="form-group">
+                        <label for="InputFilePath">File Path</label>
+                        <input type="text" class="form-control" id="InputFilePath">
+                    </div>
+                    <div id="checklist">
+                        <label for="exampleInputPassword1">Share to Groups</label>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" value="-1" id="isPublic">
+                            <label class="form-check-label" for="isPublic">
+                                Public
+                            </label>
+                        </div>
+                    </div>
+                    <button type="button" class="btn btn-primary" id="inputSubmit">Submit</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block extrascript %}
+    <script src={{ url_for('static', filename='js/postContent.js') }}></script>
+{% endblock %}

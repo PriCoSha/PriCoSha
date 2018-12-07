@@ -1,0 +1,45 @@
+{% extends 'usage_base.html' %}
+
+{% block title %}Tag Center{% endblock %}
+
+{% block body %}
+
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    Pending tags
+                </div>
+                <div class="card-block">
+                    <table id="PendingTagsTable" class="table table-striped">
+                        <thead>
+                        <tr>
+                            <th>Tagger</th>
+                            <th>Item Name</th>
+                            <th>File Path</th>
+                            <th>Tag Date</th>
+                            <th>Accept / Decline</th>
+                        </tr>
+                        </thead>
+                        <tbody id="PendingTagsTableBody">
+<tr>
+                            <th>Tagger</th>
+                            <th>Item Name</th>
+                            <th>File Path</th>
+                            <th>Tag Date</th>
+                            <th><button type="button" class="btn btn-success">Accept</button>
+<button type="button" class="btn btn-danger">Decline</button></th>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extrascript %}
+    <script src={{ url_for('static', filename='js/tagCenter.js') }}></script>
+{% endblock %}
