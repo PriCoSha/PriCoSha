@@ -4,6 +4,25 @@ from util import *
 api = Blueprint('api', __name__)
 
 
+@api.route('/content', methods=['GET'])
+def get_content():
+    item_id = request.args['item_id']
+    try:
+        email = session['email']
+        if is_visible(item_id, email):
+            parameter = (item_id)
+            sql = '\
+            SELECT * \
+            FROM ContentItem \
+            WHERE item_id = %s;\
+            '
+            data = query(sql, parameter)
+            response = SuccessResponse(data[0])
+    except KeyError:
+        response = ErrorResponse({"code": 3, "errormsg": "session error"})
+    return jsonify(response.__dict__)
+
+
 @api.route('/member', methods=['GET'])
 def get_member():
     fg_name = request.args['fg_name']
