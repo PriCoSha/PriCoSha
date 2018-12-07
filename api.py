@@ -58,7 +58,7 @@ def logout():
 @api.route('/public_content', methods=['GET'])
 def public_content():
     sql = '\
-    SELECT item_name, item_id, email_post, post_time, file_path \
+    SELECT *\
     FROM ContentItem \
     WHERE is_pub AND NOW()-post_time < 12960000 \
     ORDER BY post_time DESC;\
@@ -111,7 +111,7 @@ def private_content():
     try:
         parameter = (fg_name, owner_email)
         sql = '\
-        SELECT item_name, item_id, email_post, post_time, file_path \
+        SELECT * \
         FROM ContentItem NATURAL JOIN share \
         WHERE fg_name = %s AND owner_email = %s \
         ORDER BY post_time DESC;\
@@ -205,7 +205,7 @@ def get_rate():
     return jsonify(response.__dict__)
 
 
-@api.route('/rate', methods=['GET'])
+@api.route('/tag', methods=['GET'])
 def get_tag():
     item_id = request.args['item_id']
     try:
@@ -336,6 +336,7 @@ def add_friend():
 
     try:
         session_email = session['email']
+        response = None
         if session_email != owner_email:
             response = ErrorResponse({"code": 4, "errormsg": "Permission Denied"})
             return jsonify(response.__dict__)
@@ -375,3 +376,237 @@ def add_friend():
     except pymysql.err.IntegrityError:
         response = ErrorResponse({"code": 6, "errormsg": "This person is already in the group"})
     return jsonify(response.__dict__)
+
+
+"""
+EXTRA FEATURE BEGINS HERE
+"""
+
+
+@api.route('/rate', methods=['POST'])  # This route is for extra feature: Post comment
+def post_rate():
+    rater_email = request.form['rater_email']
+    item_id = request.form['item_id']
+    emoji = request.form['emoji']
+    try:
+        session_email = session['email']
+        # authenticate user's identity
+        if session_email != rater_email:
+            response = ErrorResponse({"code": 4, "errormsg": "Permission Denied"})
+            return jsonify(response.__dict__)
+        # authenticate if tagged can see the content
+        if is_visible(item_id, rater_email):
+            sql = '\
+            INSERT INTO Rate(email, item_id, emoji) \
+            VALUES (%s, %s, %s);\
+            '
+            parameter = (rater_email, item_id, emoji)
+            query(sql, parameter)
+            response = SuccessResponse({"msg": "Comment successfully posted."})
+        else:
+            response = ErrorResponse({"code": 4, "errormsg": "Permission Denied"})
+    except KeyError:
+        response = ErrorResponse({"code": 3, "errormsg": "session error"})
+    return jsonify(response.__dict__)
+
+
+@api.route('/friendgroup', methods=['DELETE'])  # This route is for removing a member from a friend group
+def defriend():
+    fg_name = request.form['fg_name']
+    owner_email = request.form['owner_email']
+    email = request.form['email']  # email of the user that need to be removed
+    try:
+        session_email = session['email']
+        if session_email != owner_email or not check_belong(email, fg_name, owner_email):
+            response = ErrorResponse({"code": 4, "errormsg": "Permission Denied"})
+            return jsonify(response.__dict__)
+
+        # first of all, find all the contentitem that is no more visible to this user
+        sql = '\
+        SELECT email_tagged, email_tagger, item_id \
+        FROM Tag NATURAL JOIN Share \
+        WHERE (email_tagged = %s OR email_tagger = %s) AND owner_email = %s AND fg_name = %s;\
+        '
+        parameter = (email, email, owner_email, fg_name)
+        data = query(sql, parameter)  # items that the user can no longer see
+        for item in data:  # remove the tags that he can no longer see.
+            parameter = (item['email_tagged'], item['email_tagger'], item['item_id'])
+            sql = '\
+            DELETE FROM Tag \
+            WHERE email_tagged = %s AND email_tagger = %s AND item_id = %s;\
+            '
+            query(sql, parameter)
+        # delete this user from the user group
+        parameter = (email, owner_email, fg_name)
+        sql = '\
+        DELETE FROM Belong \
+        WHERE email = %s AND owner_email = %s AND fg_name = %s;\
+        '
+        query(sql, parameter)
+        response = SuccessResponse({"msg": "This person has been successfully removed from the group"})
+    except KeyError:
+        response = ErrorResponse({"code": 3, "errormsg": "session error"})
+    return jsonify(response.__dict__)
+
+
+#############################
+#        GROUP TAGS         #
+#############################
+
+@api.route('/grouptag', methods=['POST'])
+def post_group_tag():
+    email_tagger = request.form['email_tagger']
+    fg_name = request.form['fg_name']
+    owner_email = request.form['owner_email']
+    item_id = request.form['item_id']
+    try:
+        session_email = session['email']
+        # authenticate user's identity
+        if session_email != email_tagger:
+            response = ErrorResponse({"code": 4, "errormsg": "Permission Denied"})
+            return jsonify(response.__dict__)
+        if is_visible(item_id, email_tagger) and is_group_visible(owner_email, fg_name, item_id):
+            # insert a new pending group tag
+            sql = '\
+            INSERT INTO GroupTag(email_tagger, owner_email, fg_name, item_id, num_approval) \
+            VALUES(%s, %s, %s, %s, 0);\
+            '
+            parameter = (email_tagger, owner_email, fg_name, item_id)
+            query(sql, parameter)
+
+            # insert group tag invitation for each group member
+            sql = '\
+            SELECT email \
+            FROM Belong \
+            WHERE owner_email = %s AND fg_name = %s;\
+            '
+            parameter = (owner_email, fg_name)
+            member_list = query(sql, parameter)
+            for member in member_list:
+                sql = '\
+                INSERT INTO GroupTagPending(email_tagged, email_tagger, owner_email, fg_name, item_id) \
+                VALUES(%s, %s, %s, %s, %s);\
+                '
+                parameter = (member['email'], email_tagger, owner_email, fg_name, item_id)
+                query(sql, parameter)
+            msg = "Tag Successfully Posted, waiting for group members' approval."
+            response = SuccessResponse({"msg": msg})
+        else:
+            response = ErrorResponse({"code": 4, "errormsg": "Permission Denied"})
+    except KeyError:
+        response = ErrorResponse({"code": 3, "errormsg": "session error"})
+    except pymysql.err.IntegrityError:
+        response = ErrorResponse({"code": 9, "errormsg": "Group not found"})
+    return jsonify(response.__dict__)
+
+
+@api.route('/grouptag_count', methods=['GET'])
+def grouptag_count():
+    try:
+        email = session['email']  # authenticate login
+        sql = '\
+        SELECT COUNT(*) AS grouptag_number \
+        FROM GroupTagPending \
+        WHERE email_tagged = %s AND status IS NULL;\
+        '
+        parameter = (email)
+        data = query(sql, parameter)
+        response = SuccessResponse(data[0])
+    except KeyError:
+        response = ErrorResponse({"code": 3, "errormsg": "session error"})
+    return jsonify(response.__dict__)
+
+
+@api.route('/pending_grouptag', methods=['GET'])
+def pending_grouptag():
+    try:
+        email = session['email']  # authenticate login
+        sql = '\
+        SELECT * \
+        FROM GroupTagPending NATURAL JOIN ContentItem \
+        WHERE email_tagged = %s AND status IS NULL \
+        ORDER BY tagtime DESC;\
+        '
+        parameter = (email)
+        data = query(sql, parameter)
+        response = SuccessResponse({"grouptagList": data})
+    except KeyError:
+        response = ErrorResponse({"code": 3, "errormsg": "session error"})
+    return jsonify(response.__dict__)
+
+
+@api.route('/grouptag', methods=['PATCH'])
+def grouptag_patch():
+    try:
+        email = session['email']
+        status = request.form['status']
+        email_tagged = request.form['email_tagged']
+        email_tagger = request.form['email_tagger']
+        item_id = request.form['item_id']
+        fg_name = request.form['fg_name']
+        owner_email = request.form['owner_email']
+        if email != email_tagged:
+            response = ErrorResponse({"code": 4, "errormsg": "Permission Denied"})
+            return jsonify(response.__dict__)
+        if is_request_exist(email_tagged, email_tagger, owner_email, fg_name, item_id):
+            parameter = (email_tagged, email_tagger, owner_email, fg_name, item_id)
+            sql = '\
+            DELETE FROM GroupTagPending \
+            WHERE email_tagged = %s AND email_tagger = %s AND owner_email = %s AND fg_name = %s AND item_id = %s;\
+            '
+            query(sql, parameter)
+        else:
+            response = ErrorResponse({"code": 4, "errormsg": "Permission Denied"})
+            return jsonify(response.__dict__)
+
+        if status == "1":
+            # plus one
+            sql = '\
+            UPDATE GroupTag \
+            SET num_approval = num_approval + 1 \
+            WHERE email_tagger = %s AND owner_email = %s AND fg_name = %s AND item_id = %s;\
+            '
+            parameter = (email_tagger, owner_email, fg_name, item_id)
+            query(sql, parameter)
+        elif status == "0":
+            # veto
+            sql = '\
+            UPDATE GroupTag \
+            SET veto = 1 \
+            WHERE email_tagger = %s AND owner_email = %s AND fg_name = %s AND item_id = %s;\
+            '
+            parameter = (email_tagger, owner_email, fg_name, item_id)
+            query(sql, parameter)
+        else:
+            abort(400)
+        # delete a processed request
+        response = SuccessResponse({"msg": "Successfully updated"})
+    except KeyError:
+        response = ErrorResponse({"code": 3, "errormsg": "session error"})
+    except pymysql.err.IntegrityError:
+        response = ErrorResponse({"code": 5, "errormsg": "invalid parameter, please check"})
+    return jsonify(response.__dict__)
+
+
+@api.route('/grouptag', methods=['GET'])
+def get_grouptag():
+    item_id = request.args['item_id']
+    try:
+        email = session['email']
+    except KeyError:
+        email = 'guest'
+    if is_visible(item_id, email):
+        sql = '\
+        SELECT email_tagger, owner_email, fg_name \
+        FROM GroupTag AS g \
+        WHERE item_id = %s AND veto != 1 AND num_approval >= (SELECT count(*) FROM Belong WHERE owner_email =' \
+              ' g.owner_email AND fg_name = g.fg_name) \
+        ORDER BY tagtime DESC;\
+        '
+        parameter = (item_id)
+        data = query(sql, parameter)
+        response = SuccessResponse({"GrouptagList": data})
+    else:
+        response = ErrorResponse({"code": 4, "errormsg": "Permission Denied"})
+    return jsonify(response.__dict__)
+

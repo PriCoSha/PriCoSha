@@ -61,4 +61,26 @@ def check_belong(email, fg_name, owner_email):
     return False
 
 
+def is_group_visible(owner_email, fg_name, item_id):
+    parameter = (owner_email, fg_name, item_id)
+    sql = '\
+    SELECT * \
+    FROM Share \
+    WHERE owner_email = %s AND fg_name = %s AND item_id = %s;\
+    '
+    data = query(sql, parameter)
+    if data:
+        return True
+    return False
 
+
+def is_request_exist(email_tagged, email_tagger, owner_email, fg_name, item_id):
+    parameter = (email_tagged, email_tagger, owner_email, fg_name, item_id)
+    sql = '\
+    SELECT * FROM GroupTagPending \
+    WHERE email_tagged = %s AND email_tagger = %s AND owner_email = %s AND fg_name = %s AND item_id = %s;\
+    '
+    data = query(sql, parameter)
+    if data:
+        return True
+    return False
