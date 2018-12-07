@@ -30,6 +30,9 @@ def create_app(config_name):
     def tc():
         return render_template("tagCenter.html")
 
+    @app.route('/contentPage.html')
+    def cp():
+        return render_template("contentPage.html")
     return app
 
 
