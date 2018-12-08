@@ -4,6 +4,27 @@ from util import *
 api = Blueprint('api', __name__)
 
 
+@api.route('/register', methods=['POST'])
+def register():
+    email = request.form['email']
+    password = request.form['password']
+    fname = request.form['fname']
+    lname = request.form['lname']
+    sql = '\
+    INSERT INTO Person(email, password, fname, lname) \
+    VALUE (%s, %s, %s, %s);\
+    '
+    parameter = (email, password, fname, lname)
+    try:
+        query(sql, parameter)
+        # success
+        session['email'] = email
+        response = SuccessResponse(dict(email=email, fname=fname, lname=lname))
+    except pymysql.err.IntegrityError:
+        response = ErrorResponse({"code": 11, "errormsg": "This email has been used."})
+    return jsonify(response.__dict__)
+
+
 @api.route('/content', methods=['GET'])
 def get_content():
     item_id = request.args['item_id']
@@ -16,7 +37,7 @@ def get_content():
         parameter = (item_id)
         sql = '\
         SELECT * \
-        FROM ContentItem \
+        FROM ContentItem NATURAL LEFT JOIN Movie NATURAL LEFT JOIN Picture\
         WHERE item_id = %s;\
         '
         data = query(sql, parameter)
@@ -340,6 +361,7 @@ def post_content():
     file_path = request.form['file_path']
     item_name = request.form['item_name']
     is_pub = int(request.form['is_pub'])
+    type = request.form['type'].split(';')
     if is_pub:
         is_pub = True
     else:
@@ -366,6 +388,26 @@ def post_content():
         '
         data = query(sql, parameter)
         item_id = data[0]["item_id"]
+
+        #############################
+        #        ITEM TYPES         #
+        #############################
+        if int(type[0]) == 1:
+            # insert movie
+            parameter = (item_id, type[1], type[2])
+            sql = '\
+            INSERT INTO Movie (item_id, movie_format, resolution) \
+            VALUES(%s, %s, %s);\
+            '
+            query(sql, parameter)
+        elif int(type[0]) == 2:
+            # insert picture
+            parameter = (item_id, type[1], type[2])
+            sql = '\
+            INSERT INTO Picture(item_id, location, pic_format) \
+            VALUES(%s, %s, %s);\
+            '
+            query(sql, parameter)
 
         fg_error = []
         for i in range(len(owner_emails)):
@@ -417,7 +459,7 @@ def add_friend():
             '
             query(sql, parameter)
             response = SuccessResponse({"msg": "New member successfully added."})
-        elif fname and lname: # insert using fname and lname
+        elif fname and lname:  # insert using fname and lname
             # find this person's email first:
             sql = '\
             SELECT email \
@@ -491,7 +533,9 @@ def defriend():
         if session_email != owner_email or not check_belong(email, fg_name, owner_email):
             response = ErrorResponse({"code": 4, "errormsg": "Permission Denied"})
             return jsonify(response.__dict__)
-
+        if email == owner_email:
+            response = ErrorResponse({"code": 10, "errormsg": "You can't delete yourself!"})
+            return jsonify(response.__dict__)
         # first of all, find all the contentitem that is no more visible to this user
         sql = '\
         SELECT email_tagged, email_tagger, item_id \
@@ -577,8 +621,8 @@ def grouptag_count():
         email = session['email']  # authenticate login
         sql = '\
         SELECT COUNT(*) AS grouptag_number \
-        FROM GroupTagPending \
-        WHERE email_tagged = %s AND status IS NULL;\
+        FROM GroupTagPending NATURAL JOIN GroupTag \
+        WHERE email_tagged = %s AND status IS NULL AND veto != 1;\
         '
         parameter = (email)
         data = query(sql, parameter)
@@ -593,9 +637,9 @@ def pending_grouptag():
     try:
         email = session['email']  # authenticate login
         sql = '\
-        SELECT * \
-        FROM GroupTagPending NATURAL JOIN ContentItem \
-        WHERE email_tagged = %s AND status IS NULL \
+        SELECT email_tagger, item_id, fg_name, owner_email, tagtime, item_name\
+        FROM GroupTagPending NATURAL JOIN GroupTag NATURAL JOIN ContentItem Item\
+        WHERE email_tagged = %s AND status IS NULL AND veto != 1 \
         ORDER BY tagtime DESC;\
         '
         parameter = (email)
@@ -681,10 +725,3 @@ def get_grouptag():
         response = ErrorResponse({"code": 4, "errormsg": "Permission Denied"})
     return jsonify(response.__dict__)
 
-
-#############################
-#        ITEM TYPES         #
-#############################
-@api.route('/typed_content', methods=['GET'])
-def get_content_by_type():
-    pass
