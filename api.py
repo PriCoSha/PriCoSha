@@ -577,8 +577,8 @@ def grouptag_count():
         email = session['email']  # authenticate login
         sql = '\
         SELECT COUNT(*) AS grouptag_number \
-        FROM GroupTagPending \
-        WHERE email_tagged = %s AND status IS NULL;\
+        FROM GroupTagPending NATURAL JOIN GroupTag \
+        WHERE email_tagged = %s AND status IS NULL AND veto != 1;\
         '
         parameter = (email)
         data = query(sql, parameter)
@@ -593,9 +593,9 @@ def pending_grouptag():
     try:
         email = session['email']  # authenticate login
         sql = '\
-        SELECT * \
-        FROM GroupTagPending NATURAL JOIN ContentItem \
-        WHERE email_tagged = %s AND status IS NULL \
+        SELECT email_tagger, item_id, fg_name, owner_email, tagtime, item_name\
+        FROM GroupTagPending NATURAL JOIN GroupTag NATURAL JOIN ContentItem Item\
+        WHERE email_tagged = %s AND status IS NULL AND veto != 1 \
         ORDER BY tagtime DESC;\
         '
         parameter = (email)
