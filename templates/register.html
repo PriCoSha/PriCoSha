@@ -1,0 +1,32 @@
+{% extends 'usage_base.html' %}
+
+{% block title %}Register{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <div class="row">
+            <div class="col-4 offset-4">
+                <form>
+                    <div class="form-group">
+                        <label for="inputEmail">Email address</label>
+                        <input type="email" class="form-control" id="inputEmail" aria-describedby="emailHelp"
+                               placeholder="Enter email">
+                        <label for="inputPassword">Password</label>
+                        <input type="password" class="form-control" id="inputPassword" placeholder="Password">
+                        <label for="fname">first name</label>
+                        <input type="fname" class="form-control" id="inputFname" aria-describedby="emailHelp"
+                               placeholder="First name">
+                        <label for="lname">last name</label>
+                        <input type="lname" class="form-control" id="inputLname" placeholder="Last name">
+                    </div>
+                    <button type="button" class="btn btn-primary" id="inputSubmit">Submit</button>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block extrascript %}
+    <script src={{ url_for('static', filename='js/register.js') }}></script>
+    <script src="//cdn.rawgit.com/chrisveness/crypto/4e93a4d/sha1.js"></script>
+{% endblock %}

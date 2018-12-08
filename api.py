@@ -4,6 +4,27 @@ from util import *
 api = Blueprint('api', __name__)
 
 
+@api.route('/register', methods=['POST'])
+def register():
+    email = request.form['email']
+    password = request.form['password']
+    fname = request.form['fname']
+    lname = request.form['lname']
+    sql = '\
+    INSERT INTO Person(email, password, fname, lname) \
+    VALUE (%s, %s, %s, %s);\
+    '
+    parameter = (email, password, fname, lname)
+    try:
+        query(sql, parameter)
+        # success
+        session['email'] = email
+        response = SuccessResponse(dict(email=email, fname=fname, lname=lname))
+    except pymysql.err.IntegrityError:
+        response = ErrorResponse({"code": 11, "errormsg": "This email has been used."})
+    return jsonify(response.__dict__)
+
+
 @api.route('/content', methods=['GET'])
 def get_content():
     item_id = request.args['item_id']
@@ -417,7 +438,7 @@ def add_friend():
             '
             query(sql, parameter)
             response = SuccessResponse({"msg": "New member successfully added."})
-        elif fname and lname: # insert using fname and lname
+        elif fname and lname:  # insert using fname and lname
             # find this person's email first:
             sql = '\
             SELECT email \
@@ -491,7 +512,9 @@ def defriend():
         if session_email != owner_email or not check_belong(email, fg_name, owner_email):
             response = ErrorResponse({"code": 4, "errormsg": "Permission Denied"})
             return jsonify(response.__dict__)
-
+        if email == owner_email:
+            response = ErrorResponse({"code": 10, "errormsg": "You can't delete yourself!"})
+            return jsonify(response.__dict__)
         # first of all, find all the contentitem that is no more visible to this user
         sql = '\
         SELECT email_tagged, email_tagger, item_id \
