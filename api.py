@@ -34,8 +34,8 @@ def get_member():
         email = session['email']
         parameter = (email, fg_name, owner_email)
         sql = '\
-        SELECT owner_email, fg_name \
-        FROM Belong \
+        SELECT owner_email, fg_name\
+        FROM Belong\
         WHERE email = %s AND fg_name = %s AND owner_email = %s;\
         '
         data = query(sql, parameter)
@@ -50,8 +50,8 @@ def get_member():
     try:
         parameter = (fg_name, owner_email)
         sql = '\
-        SELECT * \
-        FROM Belong \
+        SELECT email, fname, lname \
+        FROM Belong NATURAL JOIN Person \
         WHERE fg_name = %s AND owner_email = %s \
         '
         data = query(sql, parameter)

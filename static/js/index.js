@@ -18,9 +18,6 @@ $(function () {
         });
 
 
-
-
-
         let settings = {
             "async": true,
             "crossDomain": true,
@@ -147,8 +144,8 @@ $(function () {
                     $.getJSON(settings).done(function (response) {
 
                         let manage = "";
-                        if (email == lofFriendGroup[i].owner_email){
-                            manage = "1234";
+                        if (email == lofFriendGroup[i].owner_email) {
+                            manage = `<p align="right"><a href="/manageGroup.html?fg_name=` + lofFriendGroup[i].fg_name + `&owner_email=` + lofFriendGroup[i].owner_email + `">Manage Group</a></p>`;
                         }
 
 
@@ -158,7 +155,7 @@ $(function () {
                         <div class="card">
                             <div class="card-header">` +
                             "Contents shared in " + lofFriendGroup[i].fg_name + " (owned by " + lofFriendGroup[i].owner_email + ")"
-                            + manage+
+                            + manage +
                             `</div>
                             <div class="card-block">
                                 <table id="privateContentTable" class="table table-striped">

@@ -9,20 +9,18 @@
             <div class="col-12">
                 <div class="card">
                     <div class="card-header">
-                        Pending tags
+                        Manage Group
                     </div>
                     <div class="normalTag" class="card-block">
-                        <table id="PendingTagsTable" class="table table-striped">
+                        <table id="ManageGroupTable" class="table table-striped">
                             <thead>
                             <tr>
-                                <th>Tagger</th>
-                                <th>Item Name</th>
-                                <th>File Path</th>
-                                <th>Tag Date</th>
-                                <th>Accept / Decline</th>
+                                <th>Member</th>
+                                <th>Name</th>
+                                <th>Defriend</th>
                             </tr>
                             </thead>
-                            <tbody id="PendingTagsTableBody">
+                            <tbody id="ManageGroupTableBody">
 
                             </tbody>
                         </table>
@@ -31,6 +29,34 @@
             </div>
         </div>
 
+
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header">
+                            Add Friend
+                        </div>
+                        <div class="card-block">
+                            <form>
+                                <div id="fln_ipt" class="form-group">
+                                    <label for="InputContentName">First Name</label>
+                                    <input type="text" class="form-control" id="InputFriendFN">
+                                    <label for="InputContentName">Last Name</label>
+                                    <input type="text" class="form-control" id="InputFriendLN">
+                                </div>
+                                <div id="email_ipt" class="form-group">
+                                    <label for="inputEmail">Email address</label>
+                                    <input type="email" class="form-control" id="inputEmail"
+                                           aria-describedby="emailHelp">
+                                </div>
+                                <button type="button" class="btn btn-primary" id="inputSubmit">Submit</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 {% endblock %}
 
