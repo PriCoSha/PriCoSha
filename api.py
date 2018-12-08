@@ -37,7 +37,7 @@ def get_content():
         parameter = (item_id)
         sql = '\
         SELECT * \
-        FROM ContentItem \
+        FROM ContentItem NATURAL LEFT JOIN Movie NATURAL LEFT JOIN Picture\
         WHERE item_id = %s;\
         '
         data = query(sql, parameter)
@@ -361,6 +361,7 @@ def post_content():
     file_path = request.form['file_path']
     item_name = request.form['item_name']
     is_pub = int(request.form['is_pub'])
+    type = request.form['type'].split(';')
     if is_pub:
         is_pub = True
     else:
@@ -387,6 +388,26 @@ def post_content():
         '
         data = query(sql, parameter)
         item_id = data[0]["item_id"]
+
+        #############################
+        #        ITEM TYPES         #
+        #############################
+        if int(type[0]) == 1:
+            # insert movie
+            parameter = (item_id, type[1], type[2])
+            sql = '\
+            INSERT INTO Movie (item_id, movie_format, resolution) \
+            VALUES(%s, %s, %s);\
+            '
+            query(sql, parameter)
+        elif int(type[0]) == 2:
+            # insert picture
+            parameter = (item_id, type[1], type[2])
+            sql = '\
+            INSERT INTO Picture(item_id, location, pic_format) \
+            VALUES(%s, %s, %s);\
+            '
+            query(sql, parameter)
 
         fg_error = []
         for i in range(len(owner_emails)):
@@ -704,10 +725,3 @@ def get_grouptag():
         response = ErrorResponse({"code": 4, "errormsg": "Permission Denied"})
     return jsonify(response.__dict__)
 
-
-#############################
-#        ITEM TYPES         #
-#############################
-@api.route('/typed_content', methods=['GET'])
-def get_content_by_type():
-    pass
