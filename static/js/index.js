@@ -14,7 +14,9 @@ $(function () {
         };
 
         $.getJSON(settings0).done(function (response) {
-            window.email = response.data.email;
+            if (response.state){
+                window.email = response.data.email;
+            }
         });
 
 

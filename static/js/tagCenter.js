@@ -119,7 +119,6 @@ $(function () {
             });
 
         } else {
-            console.log("p2g tag");
             let idx = this.value;
             cls = this.classList[1];
             let ctt = grouptagList[idx];
@@ -148,7 +147,7 @@ $(function () {
                 "contentType": false,
                 "mimeType": "multipart/form-data",
                 "data": form
-            }
+            };
 
             $.getJSON(settings).done(function (response) {
                 let state = response.state;

@@ -68,7 +68,7 @@ $(function () {
                 if (!state) {
                     alert(response.error.errormsg)
                 } else {
-                    window.location.replace(`/`)
+                    window.location.replace(`/contentPage.html?cid=`+cid)
                 }
             });
 

@@ -89,7 +89,7 @@ $(function () {
         settings = {
             "async": true,
             "crossDomain": true,
-            "url": "http://localhost:5000/api/grouptag?item_id=1",
+            "url": "http://localhost:5000/api/grouptag?item_id="+cid,
             "method": "GET",
             "headers": {}
         }

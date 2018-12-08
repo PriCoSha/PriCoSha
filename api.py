@@ -347,7 +347,7 @@ def post_tag():
     except KeyError:
         response = ErrorResponse({"code": 3, "errormsg": "session error"})
     except pymysql.err.IntegrityError:
-        response = ErrorResponse({"code": 6, "errormsg": "Duplicate Entries. Check your input!"})
+        response = ErrorResponse({"code": 6, "errormsg": "Something wrong. Check your input!"})
     return jsonify(response.__dict__)
 
 
@@ -583,10 +583,10 @@ def post_group_tag():
         if is_visible(item_id, email_tagger) and is_group_visible(owner_email, fg_name, item_id):
             # insert a new pending group tag
             sql = '\
-            INSERT INTO GroupTag(email_tagger, owner_email, fg_name, item_id, num_approval, veto) \
-            VALUES(%s, %s, %s, %s, 0, 0);\
+            INSERT INTO GroupTag(email_tagger, owner_email, fg_name, item_id, num_approval, veto, approval_needed) \
+            VALUES(%s, %s, %s, %s, 0, 0, (SELECT count(*) FROM Belong WHERE owner_email = %s AND fg_name = %s));\
             '
-            parameter = (email_tagger, owner_email, fg_name, item_id)
+            parameter = (email_tagger, owner_email, fg_name, item_id, owner_email, fg_name)
             query(sql, parameter)
 
             # insert group tag invitation for each group member
@@ -611,7 +611,7 @@ def post_group_tag():
     except KeyError:
         response = ErrorResponse({"code": 3, "errormsg": "session error"})
     except pymysql.err.IntegrityError:
-        response = ErrorResponse({"code": 9, "errormsg": "Group not found"})
+        response = ErrorResponse({"code": 9, "errormsg": "Something Wrong, check your input"})
     return jsonify(response.__dict__)
 
 
@@ -621,7 +621,8 @@ def grouptag_count():
         email = session['email']  # authenticate login
         sql = '\
         SELECT COUNT(*) AS grouptag_number \
-        FROM GroupTagPending NATURAL JOIN GroupTag \
+        FROM GroupTagPending JOIN GroupTag \
+        USING (email_tagger, owner_email, item_id, fg_name) \
         WHERE email_tagged = %s AND status IS NULL AND veto != 1;\
         '
         parameter = (email)
@@ -637,8 +638,9 @@ def pending_grouptag():
     try:
         email = session['email']  # authenticate login
         sql = '\
-        SELECT email_tagger, item_id, fg_name, owner_email, tagtime, item_name\
-        FROM GroupTagPending NATURAL JOIN GroupTag NATURAL JOIN ContentItem Item\
+        SELECT email_tagger, item_id, fg_name, owner_email, GroupTag.tagtime, item_name\
+        FROM GroupTagPending JOIN GroupTag USING (email_tagger, owner_email, item_id, fg_name)' \
+              'NATURAL JOIN ContentItem Item\
         WHERE email_tagged = %s AND status IS NULL AND veto != 1 \
         ORDER BY tagtime DESC;\
         '
@@ -714,8 +716,7 @@ def get_grouptag():
         sql = '\
         SELECT email_tagger, owner_email, fg_name, tagtime \
         FROM GroupTag AS g \
-        WHERE item_id = %s AND veto != 1 AND num_approval >= (SELECT count(*) FROM Belong WHERE owner_email =' \
-              ' g.owner_email AND fg_name = g.fg_name) \
+        WHERE item_id = %s AND veto != 1 AND num_approval >= approval_needed \
         ORDER BY tagtime DESC;\
         '
         parameter = (item_id)

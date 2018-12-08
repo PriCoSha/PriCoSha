@@ -50,6 +50,10 @@ def create_app(config_name):
     def mg():
         return render_template("manageGroup.html")
 
+    @app.route('/register.html')
+    def register():
+        return render_template("register.html")
+
 
     return app
 
