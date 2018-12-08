@@ -80,7 +80,7 @@ $(function () {
             console.log(response);
 
 
-            let contentList = response.data.tagList;
+            let contentList = response.data.normaltagList;
             let html = '';
             for (let i = 0; i < contentList.length; i++) {
                 html = html + '<tr>';

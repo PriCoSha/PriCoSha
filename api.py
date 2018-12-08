@@ -218,7 +218,7 @@ def pending_tag():
         '
         parameter = (email)
         data = query(sql, parameter)
-        response = SuccessResponse({"tagList": data})
+        response = SuccessResponse({"normaltagList": data})
     except KeyError:
         response = ErrorResponse({"code": 3, "errormsg": "session error"})
     return jsonify(response.__dict__)
@@ -288,7 +288,7 @@ def get_tag():
         '
         parameter = (item_id)
         data = query(sql, parameter)
-        response = SuccessResponse({"tagList": data})
+        response = SuccessResponse({"normaltagList": data})
     else:
         response = ErrorResponse({"code": 4, "errormsg": "Permission Denied"})
     return jsonify(response.__dict__)

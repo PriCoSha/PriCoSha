@@ -1,3 +1,5 @@
+var alltagnumber = 0;
+
 $(function () {
     $(document).ready(() => {
         getFriendGroup();
@@ -16,7 +18,7 @@ $(function () {
             let html = '';
             for (let i = 0; i < contentList.length; i++) {
                 html = html + '<tr>';
-                html = html + '<td>' + `<a href="contentPage.html?cid=`+contentList[i].item_id+`">`+ contentList[i].item_name + '</td>';
+                html = html + '<td>' + `<a href="contentPage.html?cid=` + contentList[i].item_id + `">` + contentList[i].item_name + '</td>';
                 html = html + '<td>' + contentList[i].item_id + '</td>';
                 html = html + '<td>' + contentList[i].email_post + '</td>';
                 html = html + '<td>' + contentList[i].post_time + '</td>';
@@ -73,6 +75,7 @@ $(function () {
                 });
 
 
+                // tag count
                 var settings = {
                     "async": true,
                     "crossDomain": true,
@@ -83,14 +86,35 @@ $(function () {
 
                 $.ajax(settings).done(function (response) {
                     let number = response.data.tag_number;
-                    if (number > 0) {
-                        $("#tagRequestOption").show();
-                        $("#tagRequestNumber").text(number);
+                    window.alltagnumber = window.alltagnumber + number;
 
-                    } else {
-                        $("#tagRequestOption").hide();
-                    }
+
+                    var settings = {
+                        "async": true,
+                        "crossDomain": true,
+                        "url": "http://localhost:5000/api/grouptag_count",
+                        "method": "GET",
+                        "headers": {}
+                    };
+
+                    $.ajax(settings).done(function (response) {
+                        let number = response.data.grouptag_number;
+                        window.alltagnumber = window.alltagnumber + number;
+
+                        if (window.alltagnumber > 0) {
+                            $("#tagRequestOption").show();
+                            $("#tagRequestNumber").text(window.alltagnumber);
+
+                        } else {
+                            $("#tagRequestOption").hide();
+                        }
+
+
+                    });
+
+
                 });
+
 
                 let lofFriendGroup = response.data.friendgroup;
 
@@ -126,7 +150,7 @@ $(function () {
                                     <tbody id="privateContentTableBody">`;
                         for (let i = 0; i < contentList.length; i++) {
                             html = html + '<tr>';
-                            html = html + '<td>' + `<a href="contentPage.html?cid=`+contentList[i].item_id+`">`+contentList[i].item_name + '</td>';
+                            html = html + '<td>' + `<a href="contentPage.html?cid=` + contentList[i].item_id + `">` + contentList[i].item_name + '</td>';
                             html = html + '<td>' + contentList[i].item_id + '</td>';
                             html = html + '<td>' + contentList[i].email_post + '</td>';
                             html = html + '<td>' + contentList[i].post_time + '</td>';
