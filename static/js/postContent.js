@@ -83,6 +83,22 @@ $(function () {
             form.append("item_name", contentName);
             form.append("is_pub", is_pub);
             form.append("email_post", window.owner_email);
+            
+            let checked_value = $('input[name=exampleRadios]:checked').val();
+            let values = [];
+            if (checked_value == "option1") {
+                values.push(1);
+                values.push($("#MovieFormat")[0].value);
+                values.push($("#MovieResolution")[0].value)
+
+            } else if (checked_value == "option2") {
+                values.push(2)
+                values.push($("#PictureFormat")[0].value);
+                values.push($("#PictureLocation")[0].value)
+            } else {
+                values.push(0)
+            }
+            form.append("type", values.join(";"));
 
             let settings = {
                 "async": true,

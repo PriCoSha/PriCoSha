@@ -49,7 +49,7 @@ $(function () {
                 html = html + '<td>' + contentList[i].fname + " " + contentList[i].lname + '</td>';
                 let buttons;
                 if (owner_email == contentList[i].email) {
-                    buttons = ""
+                    buttons = `<button type="button" class="btn btn-danger" value=` + i + ` disabled>Delete</button>`;
                 } else {
                     buttons = `<button type="button" class="btn btn-danger" value=` + i + `>Delete</button>`;
 
