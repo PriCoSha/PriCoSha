@@ -41,6 +41,24 @@ $(function () {
             html = html + `<li class="list-group-item">Post Time: ` + response.data.post_time + ` </li>`;
             html = html + `<li class="list-group-item">File path: ` + response.data.file_path + ` </li>`;
 
+            if (response.data.location) {
+                html = html + `<li class="list-group-item">Location: ` + response.data.location + ` </li>`;
+            }
+
+
+            if (response.data.movie_format) {
+                html = html + `<li class="list-group-item">Movie Format: ` + response.data.movie_format + ` </li>`;
+            }
+
+            if (response.data.pic_format) {
+                html = html + `<li class="list-group-item">Picture Format: ` + response.data.pic_format + ` </li>`;
+            }
+
+            if (response.data.resolution) {
+                html = html + `<li class="list-group-item">Resolution: ` + response.data.resolution + ` </li>`;
+            }
+
+
             $('#contentblock').html(html);
         });
 

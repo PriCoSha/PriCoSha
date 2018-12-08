@@ -83,7 +83,7 @@ $(function () {
             form.append("item_name", contentName);
             form.append("is_pub", is_pub);
             form.append("email_post", window.owner_email);
-            
+
             let checked_value = $('input[name=exampleRadios]:checked').val();
             let values = [];
             if (checked_value == "option1") {
@@ -113,6 +113,7 @@ $(function () {
             };
 
             $.getJSON(settings).done(function (response) {
+                console.log(response)
                 let state = response.state;
                 if (state) {
                     window.location.replace(`/`)
