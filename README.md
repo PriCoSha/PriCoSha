@@ -9,10 +9,10 @@ The whole project is established by database, frontend, and backend. The fronten
 ## Optional Features
 
 1. Defriend
-   1. only the owner of a friendgroup can defriend the people in the friendgroup that the owner owns
-   2. After the person is defriended, the contentitem he/she has already shared in the friendgroup is still visible to other members in that friendgroup
-   3. Similarly, the rate he/she has already posted is still visible to other members
-   4. But this defriended person cannot see the contentitem from that friendgroup in his/her homepage
+   1. Only the owner of a friendgroup can defriend the people in the friendgroup that the owner owns.
+   2. After the person is defriended, the contentitem he/she has already shared in the friendgroup is still visible to other members in that friendgroup.
+   3. Similarly, the rate he/she has already posted is still visible to other members.
+   4. But this defriended person cannot see the contentitem from that friendgroup in his/her homepage.
    5. The tag information of the item that is no more visible to the user is deleted and no more visible as well.
 
 2. Post rate (comment)
@@ -24,8 +24,8 @@ The whole project is established by database, frontend, and backend. The fronten
 
 
 4. Contents have type now (movie/picture). Different types have different attributes:
-    1. Picture has location and format
-    2. Movie has resolution and format
+    1. Picture has location and format.
+    2. Movie has resolution and format.
     3. Related item will display the file type and relevant attributes in relevant page.
 
 ## Group members’ contributions
@@ -37,7 +37,7 @@ The whole project is established by database, frontend, and backend. The fronten
 
 1. Create database using the configuration in `config.py` (Recommend MAMP, password:root. Leave the password empty if using XMAPP)
 
-2. Insert testing entries using the `test_entries.sql` on google drive
+2. Insert testing entries using the `test_entries.sql`
 
 3. Set up the environment
 
