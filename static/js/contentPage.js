@@ -19,6 +19,7 @@ $(function () {
             if (!state) {
                 $("#posttagbutton").hide();
                 $("#postratebutton").hide();
+                $("#postgrouptagbutton").hide();
 
             }
         });
@@ -67,6 +68,30 @@ $(function () {
             $('#RateTableBody').html(html);
         });
 
+        settings = {
+            "async": true,
+            "crossDomain": true,
+            "url": "http://localhost:5000/api/grouptag?item_id=1",
+            "method": "GET",
+            "headers": {}
+        }
+
+        $.getJSON(settings).done(function (response) {
+            console.log(response);
+
+
+            let contentList = response.data.GrouptagList;
+            let html = '';
+            for (let i = 0; i < contentList.length; i++) {
+                html = html + '<tr>';
+                html = html + '<td>' + contentList[i].email_tagger + '</td>';
+                html = html + '<td>' + contentList[i].fg_name + '</td>';
+                html = html + '<td>' + contentList[i].owner_email + '</td>';
+                html = html + '<td>' + contentList[i].tagtime + '</td>';
+                html = html + '</tr>';
+            }
+            $('#GroupTagTableBody').html(html);
+        });
 
         settings = {
             "async": true,
@@ -101,6 +126,10 @@ $(function () {
 
     $('#postratebutton').on("click", function () {
         window.location.replace('/postRate.html?cid=' + cid)
+    });
+
+    $('#postgrouptagbutton').on("click", function () {
+        window.location.replace('/postGroupTag.html?cid=' + cid)
     });
 
 

@@ -1,0 +1,39 @@
+{% extends 'usage_base.html' %}
+
+{% block title %}Manage Group{% endblock %}
+
+{% block body %}
+
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        Pending tags
+                    </div>
+                    <div class="normalTag" class="card-block">
+                        <table id="PendingTagsTable" class="table table-striped">
+                            <thead>
+                            <tr>
+                                <th>Tagger</th>
+                                <th>Item Name</th>
+                                <th>File Path</th>
+                                <th>Tag Date</th>
+                                <th>Accept / Decline</th>
+                            </tr>
+                            </thead>
+                            <tbody id="PendingTagsTableBody">
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+{% endblock %}
+
+{% block extrascript %}
+    <script src={{ url_for('static', filename='js/manageGroup.js') }}></script>
+{% endblock %}

@@ -668,7 +668,7 @@ def get_grouptag():
         email = 'guest'
     if is_visible(item_id, email):
         sql = '\
-        SELECT email_tagger, owner_email, fg_name \
+        SELECT email_tagger, owner_email, fg_name, tagtime \
         FROM GroupTag AS g \
         WHERE item_id = %s AND veto != 1 AND num_approval >= (SELECT count(*) FROM Belong WHERE owner_email =' \
               ' g.owner_email AND fg_name = g.fg_name) \

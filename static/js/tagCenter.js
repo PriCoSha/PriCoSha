@@ -82,7 +82,7 @@ $(function () {
         let pd = cls.length;
 
         if (pd == 2) {
-            console.log("clicked")
+            console.log("p2p tag")
             let idx = this.value;
             cls = this.classList[1];
             let ctt = normaltagList[idx];
@@ -114,13 +114,50 @@ $(function () {
                 console.log(response);
 
                 if (state) {
-                    // location.reload();
-
+                    location.reload();
                 }
             });
 
         } else {
+            console.log("p2g tag");
+            let idx = this.value;
+            cls = this.classList[1];
+            let ctt = grouptagList[idx];
+            console.log(ctt);
+            let status = "0";
+            if (cls == "btn-success") {
+                status = "1";
+            }
 
+
+            var form = new FormData();
+            form.append("status", status);
+            form.append("email_tagged", owner_email);
+            form.append("email_tagger", ctt.email_tagger);
+            form.append("item_id", ctt.item_id);
+            form.append("fg_name", ctt.fg_name);
+            form.append("owner_email", ctt.owner_email);
+
+            var settings = {
+                "async": true,
+                "crossDomain": true,
+                "url": "http://localhost:5000/api/grouptag",
+                "method": "PATCH",
+                "headers": {},
+                "processData": false,
+                "contentType": false,
+                "mimeType": "multipart/form-data",
+                "data": form
+            }
+
+            $.getJSON(settings).done(function (response) {
+                let state = response.state;
+                console.log(response);
+
+                if (state) {
+                    location.reload();
+                }
+            });
         }
 
 

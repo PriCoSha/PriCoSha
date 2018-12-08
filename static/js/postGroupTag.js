@@ -1,0 +1,81 @@
+window.cid
+window.owner_email
+
+$(function () {
+    $(document).ready(() => {
+        cid = location.search.split('cid=')[1];
+
+        let settings0 = {
+            "async": true,
+            "crossDomain": true,
+            "url": "http://localhost:5000/api/email",
+            "method": "GET",
+            "headers": {}
+        };
+
+        $.getJSON(settings0).done(function (response) {
+
+            let state = response.state;
+            if (!state) {
+                window.location.replace(`/`)
+            }
+            window.owner_email = response.data.email;
+        });
+
+        var settings = {
+            "async": true,
+            "crossDomain": true,
+            "url": "http://localhost:5000/api/content?item_id=" + cid,
+            "method": "GET",
+            "headers": {}
+        };
+
+        $.getJSON(settings).done(function (response) {
+            let html = "";
+            html = html + `<li class="list-group-item">Item ID: ` + response.data.item_id + ` </li>`;
+            html = html + `<li class="list-group-item">Item name: ` + response.data.item_name + ` </li>`;
+            html = html + `<li class="list-group-item">Post By: ` + response.data.email_post + ` </li>`;
+            html = html + `<li class="list-group-item">Post Time: ` + response.data.post_time + ` </li>`;
+            html = html + `<li class="list-group-item">File path: ` + response.data.file_path + ` </li>`;
+
+            $('#contentblock').html(html);
+        });
+
+
+        $('#inputSubmit').on("click", function () {
+
+
+            var form = new FormData();
+            form.append("fg_name", $("#fgName")[0].value);
+            form.append("owner_email", $("#ownerEmail")[0].value);
+            form.append("email_tagger", owner_email);
+            form.append("item_id", cid);
+
+
+            var settings = {
+                "async": true,
+                "crossDomain": true,
+                "url": "http://localhost:5000/api/grouptag",
+                "method": "POST",
+                "headers": {},
+                "processData": false,
+                "contentType": false,
+                "mimeType": "multipart/form-data",
+                "data": form
+            }
+
+            $.getJSON(settings).done(function (response) {
+                let state = response.state;
+                if (!state) {
+                    alert(response.error.errormsg)
+                } else {
+                    window.location.replace(`/`)
+                }
+            });
+
+        });
+    });
+
+
+});
+

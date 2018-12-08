@@ -1,8 +1,25 @@
 var alltagnumber = 0;
+window.email;
 
 $(function () {
     $(document).ready(() => {
         getFriendGroup();
+
+        let settings0 = {
+            "async": true,
+            "crossDomain": true,
+            "url": "http://localhost:5000/api/email",
+            "method": "GET",
+            "headers": {}
+        };
+
+        $.getJSON(settings0).done(function (response) {
+            window.email = response.data.email;
+        });
+
+
+
+
 
         let settings = {
             "async": true,
@@ -128,13 +145,20 @@ $(function () {
                         "headers": {}
                     };
                     $.getJSON(settings).done(function (response) {
+
+                        let manage = "";
+                        if (email == lofFriendGroup[i].owner_email){
+                            manage = "1234";
+                        }
+
+
                         let contentList = response.data.contentList;
                         let html = `<div class="row">
                     <div class="col-10 offset-1">
                         <div class="card">
                             <div class="card-header">` +
                             "Contents shared in " + lofFriendGroup[i].fg_name + " (owned by " + lofFriendGroup[i].owner_email + ")"
-                            +
+                            + manage+
                             `</div>
                             <div class="card-block">
                                 <table id="privateContentTable" class="table table-striped">

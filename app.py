@@ -42,6 +42,15 @@ def create_app(config_name):
     def pr():
         return render_template("postRate.html")
 
+    @app.route('/postGroupTag.html')
+    def pgr():
+        return render_template("postGroupTag.html")
+
+    @app.route('/manageGroup.html')
+    def mg():
+        return render_template("manageGroup.html")
+
+
     return app
 
 
